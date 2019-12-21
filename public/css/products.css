@@ -1,0 +1,46 @@
+h1,
+h2 {
+  margin-top: 2em !important;
+  text-align: center;
+}
+
+.no-dots:after {
+  display: none;
+}
+
+label span i {
+  margin-left: 5px;
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.btn-style {
+  margin-bottom: 10px;
+}
+
+.table {
+  display: table;
+}
+
+.table .table-head,
+.table .table-body {
+  display: table-row-group;
+}
+
+.table .table-row {
+  display: table-row;
+}
+
+.table .table-row p {
+  font-weight: bold;
+}
+
+.table .table-row p,
+.table .table-row > div {
+  display: table-cell;
+  padding: 5px 10px;
+}
+

@@ -1,0 +1,24 @@
+h1,h2 { margin-top: 2em!important; text-align: center }
+.no-dots:after { display: none }
+label span i { margin-left: 5px; }
+
+.container {
+  max-width: 900px;
+  margin: 0 auto
+}
+
+.btn-style {
+  margin-bottom: 10px
+}
+
+.table {
+  display: table;
+  .table-head, .table-body {
+    display: table-row-group
+  }
+  .table-row {
+      display: table-row;
+      p { font-weight: bold }
+      p, & > div { display: table-cell; padding: 5px 10px }
+  }
+}
