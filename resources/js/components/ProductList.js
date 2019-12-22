@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Table, Divider, Tag } from 'antd';
+import { Table, Divider, Tag, AutoComplete  } from 'antd';
 import API from '../settings/ApiBaseUrl';
 import { Link } from "react-router-dom";
 
@@ -13,7 +13,6 @@ const columns = [
     title: 'ID',
     dataIndex: 'id',
     key: 'id',
-    render: id => {id},
   },
   {
     title: 'SKU',
@@ -59,6 +58,7 @@ const columns = [
 class ProductList extends React.Component {
 
   state = {
+    keyword: null,
     products: [],
     loading: true,
   }
@@ -68,19 +68,48 @@ class ProductList extends React.Component {
     .then(res => {
       const products = res.data;
       const loading = false;
+
       this.setState({ products, loading });
     });
   }
 
+  handleChange(keyword) {
+    this.setState({ keyword });
+  }
+
   render() {
+
+    let searchSuggestions = this.state.products.map(item => item.title);
+    let newProducts = (this.state.keyword) ?
+
+                        this.state.products.filter(item => {
+                          const lc = item.title.toLowerCase();
+                          const filter = this.state.keyword.toLowerCase();
+                          return lc.includes(filter);
+                        })
+
+                      :
+                       this.state.products;
+
     return (
       <React.Fragment>
         <div id="products-table">
           <h1>Product List</h1>
           <Link to="/create" className="btn-style ant-btn ant-btn-primary">Create Product</Link>
+          <br />
+          <AutoComplete
+              style={{ width: '100%' }}
+              dataSource={searchSuggestions}
+              placeholder="Search bar"
+              onChange={(keyword) => this.handleChange(keyword)}
+              filterOption={(inputValue, option) =>
+                option.props.children.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
+              }
+          />
+          <br />
           <Table
             columns={columns}
-            dataSource={this.state.products}
+            dataSource={newProducts}
             rowKey="id"
             locale={{ emptyText: 'No record available' }}
             loading={this.state.loading}
