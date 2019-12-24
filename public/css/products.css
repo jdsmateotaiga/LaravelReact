@@ -44,3 +44,7 @@ label span i {
   padding: 5px 10px;
 }
 
+button {
+  text-transform: capitalize !important;
+}
+

@@ -22,3 +22,5 @@ label span i { margin-left: 5px; }
       p, & > div { display: table-cell; padding: 5px 10px }
   }
 }
+
+button { text-transform: capitalize!important; }

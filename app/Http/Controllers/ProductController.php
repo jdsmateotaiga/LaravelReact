@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Product;
+use Validator;
 
 class ProductController extends Controller
 {
@@ -37,7 +38,27 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'sku' => 'unique:products',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->messages(), 200);
+        } else {
+            $product = new Product;
+            $product->sku = $request->input('sku');
+            $product->title = $request->input('title');
+            $product->amount = $request->input('amount');
+            $product->stocks = $request->input('stocks');
+            $product->body = $request->input('body');
+            $product->save();
+            return response()->json(['data' => 'Success'], 200);
+        }
+    }
+
+    public function storeImage(Request $request) {
+
+
     }
 
     /**

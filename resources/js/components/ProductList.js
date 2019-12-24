@@ -107,6 +107,7 @@ class ProductList extends React.Component {
               }
           />
           <br />
+          <br />
           <Table
             columns={columns}
             dataSource={newProducts}
