@@ -52,7 +52,7 @@ class ProductController extends Controller
             $product->stocks = $request->input('stocks');
             $product->body = $request->input('body');
             $product->save();
-            return response()->json(['data' => 'Success'], 200);
+            return response()->json(['message' => 'Success'], 200);
         }
     }
 
@@ -94,6 +94,22 @@ class ProductController extends Controller
     public function update(Request $request, $id)
     {
         //
+        $validator = Validator::make($request->all(), [
+            'sku' => 'unique:products,id,'. $id
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->messages(), 200);
+        } else {
+            $product = Product::find($id);
+            $product->sku = $request->input('sku');
+            $product->title = $request->input('title');
+            $product->amount = $request->input('amount');
+            $product->stocks = $request->input('stocks');
+            $product->body = $request->input('body');
+            $product->update();
+            return response()->json(['message' => 'Success'], 200);
+        }
     }
 
     /**
@@ -105,5 +121,7 @@ class ProductController extends Controller
     public function destroy($id)
     {
         //
+        $product = Product::find($id)->update(['status' => 0]);
+        return response()->json(['message' => 'Success'], 200);
     }
 }

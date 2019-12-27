@@ -7,6 +7,16 @@ label span i { margin-left: 5px; }
   margin: 0 auto
 }
 
+.form-container {
+
+  .ant-spin-spinning {
+    position: absolute;
+    top: 50%;
+    right: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
+
 .btn-style {
   margin-bottom: 10px
 }

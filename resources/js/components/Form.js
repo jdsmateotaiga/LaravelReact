@@ -26,7 +26,7 @@ class RegistrationForm extends React.Component {
 
   state = {
     autoCompleteResult: [],
-    products: {
+    product: {
       sku: '',
       title: '',
       amount: 0,
@@ -34,7 +34,7 @@ class RegistrationForm extends React.Component {
       stocks: 1,
       body: '',
     },
-    loading: false
+    buttonLoading: false
   };
 
   openNotification = title => {
@@ -47,28 +47,58 @@ class RegistrationForm extends React.Component {
 
   handleSubmit = e => {
     e.preventDefault();
-    this.setState({ loading: true });
+    this.setState({ buttonLoading: true });
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        API.post(`products`, values)
-        .then(res => {
-          const result = res.data;
-          this.setState({ loading: false });
-          this.props.form.resetFields();
-          if(result.data === 'Success') {
-            this.openNotification(values.title);
-          } else {
-            this.props.form.setFields({
-              sku: {
-                value: '',
-                errors: [new Error(result.sku[0])],
-              },
-            })
-          }
-        });
+        const { type, product } = this.props;
+        switch(type) {
+            case 'edit':
+              API.put(`products/${product.id}`, values)
+              .then(res => {
+                const result = res.data;
+                this.setState({ buttonLoading: false });
+                if(result.message === 'Success') {
+                  this.openNotification(values.title);
+                  window.location.hash = `/edit/${values.sku}`;
+                } else {
+                  this.props.form.setFields({
+                    sku: {
+                      value: '',
+                      errors: [new Error(result.sku[0])],
+                    },
+                  })
+                }
+              });
+            break;
+            default:
+              API.post(`products`, values)
+              .then(res => {
+                const result = res.data;
+                this.setState({ buttonLoading: false });
+                this.props.form.resetFields();
+                if(result.message === 'Success') {
+                  this.openNotification(values.title);
+                } else {
+                  this.props.form.setFields({
+                    sku: {
+                      value: '',
+                      errors: [new Error(result.sku[0])],
+                    },
+                  })
+                }
+              });
+            break;
+        }
       }
     });
   };
+
+  componentDidMount() {
+    const { type, product } = this.props;
+    if(type === 'edit') {
+      this.setState({ product });
+    }
+  }
 
   normFile = e => {
     if (Array.isArray(e)) {
@@ -80,7 +110,7 @@ class RegistrationForm extends React.Component {
   render() {
     const { getFieldDecorator } = this.props.form;
     const { autoCompleteResult } = this.state;
-    const { sku, title,  amount, images, stocks, body } = this.state.products;
+    const { sku, title,  amount, images, stocks, body } = this.state.product;
 
     const formItemLayout = {
       labelCol: {
@@ -189,13 +219,12 @@ class RegistrationForm extends React.Component {
         <Form.Item {...tailFormItemLayout}>
             <Spin
               size="small"
-              spinning={this.state.loading}>
+              spinning={this.state.buttonLoading}>
               <Button type="primary" htmlType="submit">
                 { this.props.type }
               </Button>
             </Spin>
         </Form.Item>
-
       </Form>
     );
   }

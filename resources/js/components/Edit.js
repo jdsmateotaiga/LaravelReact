@@ -11,26 +11,35 @@ class EditProduct extends React.Component {
     loading: true,
   }
 
+
   componentDidMount() {
     API.get(`products/${this.props.match.params.sku}/edit`)
-      .then(res => {
+    .then(res => {
         const product = res.data;
         const loading = false;
         this.setState({ product, loading });
-      })
+    });
   }
 
   render() {
     const { title } = this.state.product;
+    const product_items = (!this.state.loading) ?
+      <div>
+        <h1>Edit {title}</h1>
+        <ProductForm product={this.state.product} type="edit"/>
+      </div>
+      :
+      null;
     return(
       <React.Fragment>
+        <div className="form-container">
         <Spin
         tip="Loading..."
         size="large"
         spinning={this.state.loading}>
-          <h2>Edit ({title})</h2>
-          <ProductForm product={this.state.product}/>
+          {product_items}
         </Spin>
+        </div>
       </React.Fragment>
     );
   }
